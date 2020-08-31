@@ -1,0 +1,62 @@
+<?php
+
+/**
+ * 実行コマンド（プロジェクトのトップ階層で実行）
+ * 
+ * ./vendor/bin/php-cs-fixer fix --config=./.php_cs.dist --diff -v --path-mode=intersection .
+ */
+
+    // ルール
+    $rules = [
+        '@PSR2' => true,
+        'array_syntax' => [
+            'syntax' => 'short',                        // array()を[]に
+        ],
+        'binary_operator_spaces' => [
+            'default' => 'align_single_space_minimal',  // 代入・配列挿入が複数行並ぶ時、記号の位置を揃える
+        ],
+        'blank_line_before_return' => true,             // returnの前に空白行を挿入
+        'function_typehint_space' => true,              // タイプヒントと変数間はスペースを1つにする
+        'native_function_casing' => true,               // PHPの標準関数は小文字にする
+        'lowercase_cast' => true,                       // キャストは小文字にする
+        'no_trailing_whitespace_in_comment' => true,                // phpdoc:行末のスペース削除
+        'phpdoc_indent' => true,                                    // phpdoc:インデント
+        'phpdoc_order' => true,                                     // phpdoc:param->throw->returnの順に
+        'phpdoc_trim_consecutive_blank_line_separation' => true,    // phpdoc:行間を開けすぎてるなら削除
+        'phpdoc_trim' => true,                                      // phpdoc:行頭・行末の空白行を削除
+        'phpdoc_add_missing_param_annotation' => [
+            'only_untyped' => false,                // phpdoc:記述漏れを補完
+        ],
+        'phpdoc_types_order' => [
+            'null_adjustment' => 'always_last',     // phpdoc:string|nullというようにnullが最後に来るように修正
+        ],
+        'no_empty_statement' => true,               // セミコロンのみの行を削除
+        'no_useless_return' => true,                // 不要なreturnを削除
+    ];
+
+    // 除外フォルダ
+    $excludes = [
+        'bootstrap',
+        'sass',
+        'vendor',
+        'storage',
+        'public',
+    ];
+
+    $finder = PhpCsFixer\Finder::create()
+            ->in(__DIR__)
+            ->exclude($excludes)
+            // 以下、除外ファイル名
+            ->notName('README.md')
+            ->notName('.php_cs')
+            ->notName('composer.*')
+            ->notName('phpunit.xml.*')
+            ->notName('.git*')
+            ->notName('.env*')
+            ->notName('*.xml')
+            ->notName('_ide_helper.php');
+    
+    return PhpCsFixer\Config::create()
+            ->setRules($rules)
+            ->setUsingCache(false)
+            ->setFinder($finder);
